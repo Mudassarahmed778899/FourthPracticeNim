@@ -1,7 +1,8 @@
-﻿@model IEnumerable<FourthPracticeNim.Models.Product>
-
+﻿@model PagedList.IPagedList<FourthPracticeNim.Models.Product>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Product List";
+    int pageSize = ViewBag.CurrentPageSize ?? 10;
 }
 
 <div class="container mt-4">
@@ -9,6 +10,20 @@
         <h2 class="text-primary">Product List</h2>
         @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
     </div>
+
+    <form method="get" action="@Url.Action("Index")" class="mb-3">
+        <div class="row">
+            <div class="col-md-2">
+                <label for="pageSize">Records per page:</label>
+                <select name="pageSize" id="pageSize" class="form-control" onchange="this.form.submit()">
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                        <option value="@i" @(i == pageSize ? "selected" : "")>@i</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </form>
 
     <table class="table table-striped table-bordered table-hover">
         <thead class="table-dark">
@@ -36,4 +51,8 @@
             }
         </tbody>
     </table>
+
+    <div>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize }))
+    </div>
 </div>

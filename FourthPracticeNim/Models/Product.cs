@@ -20,7 +20,7 @@ namespace FourthPracticeNim.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
-        // Navigation property
+       
         public virtual Category Category { get; set; }
     }
 }

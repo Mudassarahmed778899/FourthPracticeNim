@@ -1,4 +1,5 @@
 ﻿using FourthPracticeNim.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,13 +12,17 @@ namespace FourthPracticeNim.Controllers
     public class HomeController : Controller
     {
         AppDbContext db = new AppDbContext();
-        // GET: Home
-        public ActionResult Index()
+       
+        public ActionResult Index(int page = 1, int pageSize = 10)
         {
-           var data = db.Products.ToList();
+            var data = db.Products.Include(p => p.Category)
+                                  .OrderBy(p => p.ProductId)
+                                  .ToPagedList(page, pageSize);
 
+            ViewBag.CurrentPageSize = pageSize;
             return View(data);
         }
+
         public ActionResult Create()
         {
             ViewBag.CategoryId = new SelectList(db.Categories.ToList(), "CategoryId", "CategoryName");
